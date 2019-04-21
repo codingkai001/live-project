@@ -1,29 +1,29 @@
-# live-project
-软工实践团队作业-Github实战训练（抽奖系统）
-- 题目要求：搭建一个相对公平公正的抽奖系统，根据QQ聊天记录，完成从统计参与抽奖人员颁布抽奖结果的基本流程。
-- 程序要求：
-   - 基础需求：
-      - 实现完整GUI界面
-      - 设置抽奖事件、文案、规则
-         - 设置参与抽奖关键词，所有发某个关键词的用户可参与，比如：#我要参与换组活动#、#我要红包#、#我爱软工实践#、#我要当学习委员#
-         - 抽奖活动文案
-         - 抽奖发言时段
-         - 抽奖过滤规则
-            - 例如过滤掉平时不发言的同学
-            - 例如过滤掉助教和老师
-         - 抽奖结果公布时间
-         - 抽奖人数
-         - 奖品列表
-         - 获奖名单
-      - 导出抽奖结果（抽奖话题、中奖人员、对应奖项）
-      - 设计公平且令人信服的抽奖算法
-         - 提供不过滤、普通过滤、深度过滤等满足不同用户需求的抽奖功能选项
-         - 杜绝过于简单的随机算法，不以单一指标为抽奖标准
-         - 在博客中描述抽奖算法设计思路（文字/图片）
-         - 抽奖所需聊天记录已给出（前置数据集已插入上述关键词）
-   - 附加需求：
-      - 支持对聊天记录进行分析与挖掘（能挖掘出什么样的信息，就看你们自己了）
-         - idea请给力一点
-         - 用于分析挖掘的数据集
-      - 支持获奖名单生成较为美观的海报（jpg、png）
-      - 鼓励有想法且有用的功能
+# lotterysystem
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
