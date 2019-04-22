@@ -1,18 +1,136 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <el-form ref="form" :model="form" label-width="80px">
+    <el-form-item label="关键词">
+      <el-tag
+        :key="tag"
+        v-for="tag in form.tags"
+        closable
+        @close="handleRemoveTag(tag)">
+        {{tag}}
+      </el-tag>
+      <el-input
+        class="input-new-tag"
+        v-model="newKeyword"
+        ref="saveTagInput"
+        size='small'
+        style='width: 10em'
+        @keyup.enter.native="handleNewKeyword"
+        @blur="handleNewKeyword"
+      >
+      </el-input>
+    </el-form-item>
+    <el-form-item label="发言时段">
+      <el-date-picker
+        v-model="form.period"
+        type="datetimerange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        align="right">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item label="奖品列表">
+      <div v-for="prize in form.prizes" :key="prize.name">
+        <div><span>{{prize.name}} - {{prize.count}}人</span><span style='margin-left: 1em'><el-button size='small' @click="removePrize(prize.name)">删除</el-button></span></div>
+      </div>
+      <div class='prize-add-row'>
+        <el-input size='small' style='width: 10em' placeholder='奖品名' v-model="newPrizeName"></el-input>
+        <el-input-number size='small' v-model="newPrizeCount" :min="1" :max="100" label="奖品数量"></el-input-number>
+      <el-button size='small' @click='handleAddPrize'>增加</el-button>
+      </div>
+    </el-form-item>
+    <el-form-item label="聊天记录">
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action=''
+        :file-list="form.fileList"
+        :show-file-list="false"
+        :auto-upload="false">
+          <el-button slot="trigger" size="small">选择聊天记录</el-button>
+      </el-upload>
+    </el-form-item>
+    <el-form-item label="其他">
+      <el-checkbox v-model="form.filterTeacher" label="过滤助教和教师"></el-checkbox>
+      <el-checkbox v-model="form.filterInactive" label="过滤平时不活跃用户"></el-checkbox>
+
+    </el-form-item>
+    <el-form-item label="抽奖文案">
+      <el-input type="textarea" v-model="form.desc"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">抽奖</el-button>
+      <el-button>取消</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      newPrizeName: '',
+      newPrizeCount: 10,
+      newKeyword: '',
+      fileList: [],
+      form: {
+        tags: ['我要参与换组活动', '我要红包', '我爱软工实践', '我要当学习委员'],
+        prizes: [
+          { name: '不知道什么奖品', count: 10 }
+        ],
+        winnersCount: 10,
+        name: '',
+        period: [new Date(2022, 8, 10, 10, 10), new Date(2022, 12, 31, 10, 10)],
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
+        filterTeacher: true,
+        filterInactive: false
+      }
+    }
+  },
+  methods: {
+    onSubmit () {
+      console.log('submit!')
+    },
+    handleRemoveTag (tag) {
+      this.form.tags.splice(this.form.tags.indexOf(tag), 1)
+    },
+    removePrize (name) {
+      this.form.prizes = this.form.prizes.filter(prize => prize.name !== name)
+    },
+    handleAddPrize () {
+      this.form.prizes.push({
+        name: this.newPrizeName,
+        count: this.newPrizeCount
+      })
+      this.newPrizeName = ''
+    },
+    handleNewKeyword () {
+      let inputValue = this.newKeyword
+      if (inputValue) {
+        this.form.tags.push(inputValue)
+      }
+      this.newKeyword = ''
+    }
   }
 }
 </script>
+<style lang='scss'>
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+    line-height: 38px;
+  }
+  .prize-add-row {
+    padding-top: 1em;
+    > * {
+      margin-right: 1em;
+    }
+  }
+</style>
