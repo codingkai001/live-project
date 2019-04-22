@@ -72,6 +72,8 @@
 
 <script>
 import parseRecord from '../utils/parseRecord'
+import doLotty from '../utils/doLotty'
+
 export default {
   data () {
     return {
@@ -86,16 +88,24 @@ export default {
         prizes: [
           { name: '不知道什么奖品', count: 10 }
         ],
-        period: [new Date(2022, 8, 10, 10, 10), new Date(2022, 12, 31, 10, 10)],
+        period: [new Date(2022, 1, 10, 10, 10), new Date(2022, 12, 31, 10, 10)],
         description: '',
         filterTeacher: true,
         filterInactive: false
       }
     }
   },
+  created () {
+    /*
+    const text = require('raw-loader!../../.data/QQrecord-2022.txt') // eslint-disable-line
+    this.chats = parseRecord(text.default)
+    */
+  },
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    doLotty () {
+      console.log(this.form)
+      const ret = doLotty(this.chats, this.form)
+      console.log(ret)
     },
     handleRemoveTag (tag) {
       this.form.tags.splice(this.form.tags.indexOf(tag), 1)
@@ -127,7 +137,9 @@ export default {
           this.parseChatMessage = '解析失败，请确认是否是QQ聊天记录。'
           this.chats = []
         } else {
-          this.parseChatMessage = '解析成功，共解析' + ret.length + '条记录。'
+          const accountSet = new Set()
+          ret.forEach((chat) => accountSet.add(chat.account))
+          this.parseChatMessage = `解析成功，共解析${ret.length}条记录，找到${accountSet.size}个用户。`
           this.chats = ret
           console.log(ret)
         }

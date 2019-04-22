@@ -1,6 +1,18 @@
+import userInBlacklist from './userInBlacklist'
+
 export default (content) => {
   const records = content.split('\n').map(a => a.trim())
   const ret = []
+
+  const pushUser = (chat) => {
+    if (chat !== null) {
+      if (!userInBlacklist(chat)) {
+        chat.content = chat.content.trim()
+        makeTags(chat)
+        ret.push(chat)
+      }
+    }
+  }
 
   let current = null
 
@@ -15,16 +27,12 @@ export default (content) => {
   }
 
   records.forEach(record => {
-    const regex = /^(\d{4}-\d{2}-\d{2} \d{1,2}:\d{1,2}:\d{1,2}) (.*?)[(<](.*?)[)>]$/
+    const regex = /^(\d{4}-\d{2}-\d{2} \d{1,2}:\d{1,2}:\d{1,2}) (.*?)[(<]([a-zA-Z0-9@.-]*?)[)>]$/
     if (regex.test(record)) {
       const match = record.match(regex)
-      if (current !== null) {
-        current.content = current.content.trim()
-        makeTags(current)
-        ret.push(current)
-      }
+      pushUser(current)
       current = {
-        time: new Date(match[1]).getTime(),
+        time: new Date(match[1]),
         nickname: match[2],
         account: match[3],
         tags: [],
@@ -37,8 +45,6 @@ export default (content) => {
       current.content += record + '\n'
     }
   })
-  if (current !== null) {
-    ret.push(current)
-  }
+  pushUser(current)
   return ret
 }
