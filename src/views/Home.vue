@@ -46,8 +46,13 @@
         action=''
         :file-list="form.fileList"
         :show-file-list="false"
+        :multiple="false"
+        :on-change="handleFileUpload"
         :auto-upload="false">
           <el-button slot="trigger" size="small">选择聊天记录</el-button>
+          <span v-if="parseChatMessage !== ''">
+            {{parseChatMessage}}
+          </span>
       </el-upload>
     </el-form-item>
     <el-form-item label="其他">
@@ -56,35 +61,33 @@
 
     </el-form-item>
     <el-form-item label="抽奖文案">
-      <el-input type="textarea" v-model="form.desc"></el-input>
+      <el-input type="textarea" v-model="form.description"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">抽奖</el-button>
+      <el-button type="primary" @click="doLotty">抽奖</el-button>
       <el-button>取消</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import parseRecord from '../utils/parseRecord'
 export default {
   data () {
     return {
       newPrizeName: '',
       newPrizeCount: 10,
       newKeyword: '',
+      parseChatMessage: '',
       fileList: [],
+      chats: [],
       form: {
         tags: ['我要参与换组活动', '我要红包', '我爱软工实践', '我要当学习委员'],
         prizes: [
           { name: '不知道什么奖品', count: 10 }
         ],
-        winnersCount: 10,
-        name: '',
         period: [new Date(2022, 8, 10, 10, 10), new Date(2022, 12, 31, 10, 10)],
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
+        description: '',
         filterTeacher: true,
         filterInactive: false
       }
@@ -113,6 +116,23 @@ export default {
         this.form.tags.push(inputValue)
       }
       this.newKeyword = ''
+    },
+    handleFileUpload (file, fileList) {
+      if (file.status !== 'ready') return
+      const reader = new FileReader()
+      reader.onload = (file) => {
+        const content = file.target.result
+        const ret = parseRecord(content)
+        if (ret.length === 0) {
+          this.parseChatMessage = '解析失败，请确认是否是QQ聊天记录。'
+          this.chats = []
+        } else {
+          this.parseChatMessage = '解析成功，共解析' + ret.length + '条记录。'
+          this.chats = ret
+          console.log(ret)
+        }
+      }
+      reader.readAsText(file.raw)
     }
   }
 }
