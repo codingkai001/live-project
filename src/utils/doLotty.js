@@ -69,7 +69,7 @@ export default (chats, config) => {
 
   // 过滤平时不活跃用户
   for (let user of userChatCountUnfilteredMap) {
-    if (user[1] > inactiveThresold) {
+    if (user[1] < inactiveThresold) {
       userChatCountMap.delete(user[0])
     }
   }
