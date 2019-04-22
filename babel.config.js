@@ -1,10 +1,4 @@
 module.exports = {
-<<<<<<< HEAD
-  presets: [
-    '@vue/app'
-  ]
-}
-=======
   "presets": [
     "@vue/app"
   ],
@@ -18,4 +12,3 @@ module.exports = {
     ]
   ]
 }
->>>>>>> Initialize Vuejs Repo
